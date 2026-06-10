@@ -37,21 +37,22 @@ export function ChatProvider({
     messages,
     input,
     handleInputChange,
-    handleSubmit,
+    handleSubmit: aiHandleSubmit,
     status,
   } = useAIChat({
     api: "/api/chat",
     initialMessages,
-    body: {
-      files: fileSystem.serialize(),
-      projectId,
-    },
     onToolCall: ({ toolCall }) => {
       handleToolCall(toolCall);
     },
   });
 
-  // Track anonymous work
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    aiHandleSubmit(e, {
+      body: { files: fileSystem.serialize(), projectId },
+    });
+  };
+
   useEffect(() => {
     if (!projectId && messages.length > 0) {
       setHasAnonWork(messages, fileSystem.serialize());
@@ -63,7 +64,7 @@ export function ChatProvider({
       value={{
         messages,
         input,
-        handleInputChange,
+        handleInputChange: handleInputChange as (e: React.ChangeEvent<HTMLTextAreaElement>) => void,
         handleSubmit,
         status,
       }}
