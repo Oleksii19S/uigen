@@ -430,7 +430,7 @@ export default function App() {
       <div className="w-full max-w-md">
         <Card 
           title="My Card"
-          description="This is a fantastic product that will change your life. Experience the difference today!"
+          description="Je to perdel"
           actions={
             <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
               Pavel Houska
