@@ -26,32 +26,32 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
 
   return (
     <div className="flex flex-col h-full overflow-y-auto px-4 py-6">
-      <div className="space-y-6 max-w-4xl mx-auto w-full">
+      <div className="space-y-5 max-w-4xl mx-auto w-full">
         {messages.map((message, index) => (
           <div
             key={message.id || index}
             className={cn(
-              "flex gap-4",
+              "flex gap-3",
               message.role === "user" ? "justify-end" : "justify-start"
             )}
           >
             {message.role === "assistant" && (
               <div className="flex-shrink-0">
-                <div className="w-9 h-9 rounded-lg bg-white border border-neutral-200 shadow-sm flex items-center justify-center">
-                  <Bot className="h-4.5 w-4.5 text-neutral-700" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-200 shadow-sm flex items-center justify-center">
+                  <Bot className="h-4 w-4 text-blue-600" />
                 </div>
               </div>
             )}
-            
+
             <div className={cn(
-              "flex flex-col gap-2 max-w-[85%]",
+              "flex flex-col gap-2 max-w-[80%]",
               message.role === "user" ? "items-end" : "items-start"
             )}>
               <div className={cn(
-                "rounded-xl px-4 py-3",
-                message.role === "user" 
-                  ? "bg-blue-600 text-white shadow-sm" 
-                  : "bg-white text-neutral-900 border border-neutral-200 shadow-sm"
+                "rounded-3xl px-5 py-3",
+                message.role === "user"
+                  ? "bg-blue-500 text-white shadow-md"
+                  : "bg-neutral-100 text-neutral-900"
               )}>
                 <div className="text-sm">
                   {message.parts ? (
@@ -70,7 +70,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                             );
                           case "reasoning":
                             return (
-                              <div key={partIndex} className="mt-3 p-3 bg-white/50 rounded-md border border-neutral-200">
+                              <div key={partIndex} className="mt-3 p-3 bg-white/60 rounded-2xl border border-neutral-200">
                                 <span className="text-xs font-medium text-neutral-600 block mb-1">Reasoning</span>
                                 <span className="text-sm text-neutral-700">{part.reasoning}</span>
                               </div>
@@ -118,8 +118,8 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
             
             {message.role === "user" && (
               <div className="flex-shrink-0">
-                <div className="w-9 h-9 rounded-lg bg-blue-600 shadow-sm flex items-center justify-center">
-                  <User className="h-4.5 w-4.5 text-white" />
+                <div className="w-8 h-8 rounded-full bg-blue-500 shadow-sm flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
                 </div>
               </div>
             )}
