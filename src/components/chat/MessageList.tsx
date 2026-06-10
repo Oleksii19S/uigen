@@ -15,7 +15,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
   if (messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full px-4 text-center">
-        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-200 mb-4 shadow-sm">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-900 to-blue-800 border border-blue-700 mb-4 shadow-sm">
           <Bot className="h-7 w-7 text-blue-600" />
         </div>
         <p className="text-neutral-900 font-semibold text-lg mb-2">Start a conversation to generate React components</p>
@@ -37,7 +37,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           >
             {message.role === "assistant" && (
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-200 shadow-sm flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-800 border border-blue-700 shadow-sm flex items-center justify-center">
                   <Bot className="h-4 w-4 text-blue-600" />
                 </div>
               </div>
@@ -50,8 +50,8 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
               <div className={cn(
                 "rounded-3xl px-5 py-3",
                 message.role === "user"
-                  ? "bg-blue-500 text-white shadow-md"
-                  : "bg-neutral-100 text-neutral-900"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-neutral-800 text-neutral-100"
               )}>
                 <div className="text-sm">
                   {message.parts ? (
@@ -70,7 +70,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                             );
                           case "reasoning":
                             return (
-                              <div key={partIndex} className="mt-3 p-3 bg-white/60 rounded-2xl border border-neutral-200">
+                              <div key={partIndex} className="mt-3 p-3 bg-neutral-900/60 rounded-2xl border border-neutral-700">
                                 <span className="text-xs font-medium text-neutral-600 block mb-1">Reasoning</span>
                                 <span className="text-sm text-neutral-700">{part.reasoning}</span>
                               </div>
@@ -84,7 +84,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                               </div>
                             );
                           case "step-start":
-                            return partIndex > 0 ? <hr key={partIndex} className="my-3 border-neutral-200" /> : null;
+                            return partIndex > 0 ? <hr key={partIndex} className="my-3 border-neutral-700" /> : null;
                           default:
                             return null;
                         }
