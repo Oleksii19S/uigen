@@ -37,12 +37,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const lastCustomer = await prisma.customer.findFirst({
-      orderBy: { id: "desc" },
-    });
-    const nextIndex = lastCustomer
-      ? parseInt(lastCustomer.id.replace("u_", ""), 10) + 1
-      : 0;
+    const allIds = (await prisma.customer.findMany({ select: { id: true } }))
+      .map((c) => parseInt(c.id.replace("u_", ""), 10))
+      .filter((n) => !isNaN(n));
+    const nextIndex = allIds.length > 0 ? Math.max(...allIds) + 1 : 0;
+
+    if (nextIndex > 99) {
+      return NextResponse.json(
+        { error: "ID limit reached. Maximum allowed ID is u_99." },
+        { status: 422 }
+      );
+    }
+
     const id = `u_${String(nextIndex).padStart(2, "0")}`;
 
     const customer = await prisma.customer.create({
