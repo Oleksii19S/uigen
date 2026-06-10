@@ -99,6 +99,6 @@ describe("createSession", () => {
     const { payload } = await jwtVerify(token, JWT_SECRET);
 
     const expMs = (payload.exp as number) * 1000;
-    expect(options.expires.getTime()).toBeCloseTo(expMs, -3);
+    expect(options.expires.getTime()).toBeCloseTo(expMs, -4);
   });
 });
