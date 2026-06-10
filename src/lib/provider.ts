@@ -291,19 +291,22 @@ const ContactForm = () => {
 export default ContactForm;`;
 
       case "card":
-        return `import React, { useState, useEffect } from 'react';
+        return `import React, { useState } from 'react';
 
 const Card = ({ title = "My Card", description = "Je to perdel" }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [entries, setEntries] = useState([]);
 
-  useEffect(() => {
-    fetch('/api/customers')
-      .then(res => res.json())
-      .then(data => { if (Array.isArray(data)) setEntries(data); })
-      .catch(e => console.error('Failed to load customers:', e));
-  }, []);
+  const handleLoad = async () => {
+    try {
+      const res = await fetch('/api/customers');
+      const data = await res.json();
+      if (Array.isArray(data)) setEntries(data);
+    } catch (e) {
+      console.error('Failed to load customers:', e);
+    }
+  };
   const [emailError, setEmailError] = useState('');
   const [submitError, setSubmitError] = useState('');
 
@@ -374,6 +377,12 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
             {submitError && <p className="text-red-500 text-xs mt-1">{submitError}</p>}
           </div>
           <div className="flex-1 overflow-auto">
+            <button
+              onClick={handleLoad}
+              className="mb-2 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded border border-gray-300 transition-colors"
+            >
+              Load
+            </button>
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-gray-50">
