@@ -301,13 +301,22 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!isValidEmail(email)) {
       setEmailError('belbec, musis pouzit jako name@domain.com');
       return;
     }
     if (!password) return;
     setEmailError('');
+    try {
+      await fetch('/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (e) {
+      console.error('Failed to save customer:', e);
+    }
     setEntries([...entries, { email, password }]);
     setEmail('');
     setPassword('');

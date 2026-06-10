@@ -21,6 +21,13 @@ model User {
   projects  Project[]
 }
 
+model Customer {
+  id            String   @id @default(cuid())
+  email         String
+  password      String
+  creation_date DateTime @default(now())
+}
+
 model Project {
   id        String   @id @default(cuid())
   name      String
