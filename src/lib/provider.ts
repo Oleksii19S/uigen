@@ -291,12 +291,19 @@ const ContactForm = () => {
 export default ContactForm;`;
 
       case "card":
-        return `import React, { useState } from 'react';
+        return `import React, { useState, useEffect } from 'react';
 
 const Card = ({ title = "My Card", description = "Je to perdel" }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/customers')
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setEntries(data); })
+      .catch(e => console.error('Failed to load customers:', e));
+  }, []);
   const [emailError, setEmailError] = useState('');
   const [submitError, setSubmitError] = useState('');
 
