@@ -54,12 +54,21 @@ export class MockLanguageModel implements LanguageModelV1 {
     return null;
   }
 
+  private countCurrentTurnToolMessages(messages: LanguageModelV1Message[]): number {
+    let lastUserIndex = -1;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "user") { lastUserIndex = i; break; }
+    }
+    if (lastUserIndex === -1) return 0;
+    return messages.slice(lastUserIndex + 1).filter((m) => m.role === "tool").length;
+  }
+
   private async *generateMockStream(
     messages: LanguageModelV1Message[],
-    userPrompt: string
+    userPrompt: string,
+    turnId: string
   ): AsyncGenerator<LanguageModelV1StreamPart> {
-    // Count tool messages to determine which step we're on
-    const toolMessageCount = messages.filter((m) => m.role === "tool").length;
+    const toolMessageCount = this.countCurrentTurnToolMessages(messages);
 
     // Determine component type from the original user prompt
     const promptLower = userPrompt.toLowerCase();
@@ -85,7 +94,7 @@ export class MockLanguageModel implements LanguageModelV1 {
       yield {
         type: "tool-call",
         toolCallType: "function",
-        toolCallId: `call_1`,
+        toolCallId: `call_${turnId}_1`,
         toolName: "str_replace_editor",
         args: JSON.stringify({
           command: "create",
@@ -116,7 +125,7 @@ export class MockLanguageModel implements LanguageModelV1 {
       yield {
         type: "tool-call",
         toolCallType: "function",
-        toolCallId: `call_2`,
+        toolCallId: `call_${turnId}_2`,
         toolName: "str_replace_editor",
         args: JSON.stringify({
           command: "str_replace",
@@ -148,7 +157,7 @@ export class MockLanguageModel implements LanguageModelV1 {
       yield {
         type: "tool-call",
         toolCallType: "function",
-        toolCallId: `call_3`,
+        toolCallId: `call_${turnId}_3`,
         toolName: "str_replace_editor",
         args: JSON.stringify({
           command: "create",
@@ -429,9 +438,11 @@ export default function App() {
 
     // Collect all stream parts
     const parts: LanguageModelV1StreamPart[] = [];
+    const turnId = Math.random().toString(36).slice(2, 8);
     for await (const part of this.generateMockStream(
       options.prompt,
-      userPrompt
+      userPrompt,
+      turnId
     )) {
       parts.push(part);
     }
@@ -478,12 +489,13 @@ export default function App() {
     options: Parameters<LanguageModelV1["doStream"]>[0]
   ): Promise<Awaited<ReturnType<LanguageModelV1["doStream"]>>> {
     const userPrompt = this.extractUserPrompt(options.prompt);
+    const turnId = Math.random().toString(36).slice(2, 8);
     const self = this;
 
     const stream = new ReadableStream<LanguageModelV1StreamPart>({
       async start(controller) {
         try {
-          const generator = self.generateMockStream(options.prompt, userPrompt);
+          const generator = self.generateMockStream(options.prompt, userPrompt, turnId);
           for await (const chunk of generator) {
             controller.enqueue(chunk);
           }

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git *)",
+      "PowerShell(git config *)",
+      "PowerShell(git commit *)",
+      "PowerShell(git rebase *)",
+      "PowerShell(git remote *)",
+      "PowerShell(git push *)",
+      "PowerShell(gh repo *)"
+    ]
+  }
+}
