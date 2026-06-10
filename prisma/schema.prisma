@@ -25,7 +25,7 @@ model Customer {
   id            String   @id @default(cuid())
   email         String
   password      String
-  creation_date DateTime @default(now())
+  creation_date String
 }
 
 model Project {

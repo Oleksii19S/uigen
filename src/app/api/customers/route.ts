@@ -12,8 +12,10 @@ export async function POST(req: Request) {
       );
     }
 
+    const creation_date = new Date().toISOString().split("T")[0];
+
     const customer = await prisma.customer.create({
-      data: { email, password },
+      data: { email, password, creation_date },
     });
 
     return NextResponse.json(customer, { status: 201 });
