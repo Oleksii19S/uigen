@@ -206,82 +206,77 @@ The component is now ready to use. You can see the preview on the right side of 
   private getComponentCode(componentType: string): string {
     switch (componentType) {
       case "form":
-        return `import React, { useState } from 'react';
+        return `import { useState } from 'react';
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [sent, setSent] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setSent(true);
   };
 
+  if (sent) {
+    return (
+      <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 max-w-md w-full text-center">
+        <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
+          <span className="text-emerald-400 text-xl">✓</span>
+        </div>
+        <h3 className="text-white font-semibold text-lg mb-2">Message sent</h3>
+        <p className="text-white/50 text-sm">We'll get back to you within 24 hours.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Contact Us</h2>
+    <div className="bg-zinc-900 rounded-2xl p-8 border border-white/10 max-w-md w-full">
+      <h2 className="text-white text-2xl font-bold mb-1">Get in touch</h2>
+      <p className="text-white/50 text-sm mb-6">We reply to every message.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Name
-          </label>
+          <label className="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider">Name</label>
           <input
             type="text"
-            id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Your name"
+            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-500/60 focus:bg-white/8 transition-all text-sm"
           />
         </div>
-        
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
+          <label className="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider">Email</label>
           <input
             type="email"
-            id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="you@example.com"
+            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-500/60 transition-all text-sm"
           />
         </div>
-        
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message
-          </label>
+          <label className="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider">Message</label>
           <textarea
-            id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
             required
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="How can we help?"
+            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-violet-500/60 transition-all text-sm resize-none"
           />
         </div>
-        
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+          className="w-full py-2.5 rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-medium text-sm hover:opacity-90 transition-opacity"
         >
-          Send Message
+          Send message
         </button>
       </form>
     </div>
@@ -291,121 +286,48 @@ const ContactForm = () => {
 export default ContactForm;`;
 
       case "card":
-        return `import React, { useState } from 'react';
+        return `import { useState } from 'react';
 
-const Card = ({ title = "My Card", description = "Je to perdel" }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [entries, setEntries] = useState([]);
-
-  const handleLoad = async () => {
-    try {
-      const res = await fetch('/api/customers');
-      const data = await res.json();
-      if (Array.isArray(data)) setEntries(data);
-    } catch (e) {
-      console.error('Failed to load customers:', e);
-    }
-  };
-  const [emailError, setEmailError] = useState('');
-  const [submitError, setSubmitError] = useState('');
-
-  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-
-  const handleAdd = async () => {
-    if (!isValidEmail(email)) {
-      setEmailError('belbec, musis pouzit jako name@domain.com');
-      return;
-    }
-    if (!password) return;
-    setEmailError('');
-    setSubmitError('');
-    try {
-      const res = await fetch('/api/customers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setSubmitError(data.error || 'Failed to save customer.');
-        return;
-      }
-    } catch (e) {
-      setSubmitError('Failed to save customer.');
-      return;
-    }
-    setEntries([...entries, { email, password }]);
-    setEmail('');
-    setPassword('');
-  };
+const Card = () => {
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-1">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <div className="flex gap-6">
-          <div className="flex flex-col gap-3 w-64">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => { setEmail(e.target.value); setEmailError(''); }}
-                placeholder="Enter your email"
-                className={\`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 \${emailError ? 'border-red-500' : 'border-gray-300'}\`}
-              />
-              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <button
-              onClick={handleAdd}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-            >
-              Pavel Houska
-            </button>
-            {submitError && <p className="text-red-500 text-xs mt-1">{submitError}</p>}
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 w-80">
+      <div className="relative">
+        <div className="h-48 bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+            <span className="text-3xl">✦</span>
           </div>
-          <div className="flex-1 overflow-auto">
-            <button
-              onClick={handleLoad}
-              className="mb-2 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded border border-gray-300 transition-colors"
-            >
-              Load
-            </button>
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="text-left px-3 py-2 border border-gray-200 font-medium text-gray-700">Email</th>
-                  <th className="text-left px-3 py-2 border border-gray-200 font-medium text-gray-700">Password</th>
-                </tr>
-              </thead>
-              <tbody>
-                {entries.length === 0 ? (
-                  <tr>
-                    <td colSpan={2} className="px-3 py-4 text-center text-gray-400 border border-gray-200">No entries yet</td>
-                  </tr>
-                ) : (
-                  entries.map((entry, i) => (
-                    <tr key={i} className="hover:bg-gray-50">
-                      <td className="px-3 py-2 border border-gray-200">{entry.email}</td>
-                      <td className="px-3 py-2 border border-gray-200">{'•'.repeat(entry.password.length)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+        </div>
+        <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs text-white/80 border border-white/10">
+          Featured
+        </div>
+      </div>
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <div>
+            <h3 className="text-white font-semibold text-lg leading-tight">Aurora Pro</h3>
+            <p className="text-white/50 text-sm mt-0.5">Design toolkit</p>
           </div>
+          <span className="text-violet-400 font-bold text-lg">$49</span>
+        </div>
+        <p className="text-white/60 text-sm leading-relaxed mb-4">
+          A curated set of components and templates built for modern product teams.
+        </p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setLiked(!liked)}
+            className={\`flex-1 py-2 rounded-lg text-sm font-medium transition-all \${liked ? 'bg-violet-500 text-white' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'}\`}
+          >
+            {liked ? '♥ Liked' : '♡ Like'}
+          </button>
+          <button
+            onClick={() => setSaved(!saved)}
+            className={\`flex-1 py-2 rounded-lg text-sm font-medium transition-all \${saved ? 'bg-indigo-500 text-white' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'}\`}
+          >
+            {saved ? '✓ Saved' : '+ Save'}
+          </button>
         </div>
       </div>
     </div>
@@ -420,40 +342,32 @@ export default Card;`;
 const Counter = () => {
   const [count, setCount] = useState(0);
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    setCount(count - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
-
   return (
-    <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Counter</h2>
-      <div className="text-4xl font-bold mb-6">{count}</div>
-      <div className="flex gap-4">
-        <button 
-          onClick={decrement}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+    <div className="flex flex-col items-center gap-8 px-10 py-10 bg-zinc-900 rounded-2xl border border-white/10">
+      <div className="text-center">
+        <p className="text-white/40 text-xs uppercase tracking-widest mb-1">Count</p>
+        <div className={\`text-7xl font-bold tabular-nums transition-all \${count > 0 ? 'text-violet-400' : count < 0 ? 'text-rose-400' : 'text-white'}\`}>
+          {count}
+        </div>
+      </div>
+      <div className="flex gap-3">
+        <button
+          onClick={() => setCount(c => c - 1)}
+          className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-white/70 text-xl hover:bg-white/10 hover:text-white transition-all"
         >
-          Decrease
+          −
         </button>
-        <button 
-          onClick={reset}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+        <button
+          onClick={() => setCount(0)}
+          className="px-5 h-11 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all"
         >
           Reset
         </button>
-        <button 
-          onClick={increment}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        <button
+          onClick={() => setCount(c => c + 1)}
+          className="w-11 h-11 rounded-full bg-violet-500 text-white text-xl hover:bg-violet-400 transition-all"
         >
-          Increase
+          +
         </button>
       </div>
     </div>
@@ -469,7 +383,7 @@ export default Counter;`;
       case "form":
         return "    console.log('Form submitted:', formData);";
       case "card":
-        return '      <div className="p-6">';
+        return '    <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 w-80">';
       default:
         return "  const increment = () => setCount(count + 1);";
     }
@@ -480,35 +394,19 @@ export default Counter;`;
       case "form":
         return "    console.log('Form submitted:', formData);\n    alert('Thank you! We\\'ll get back to you soon.');";
       case "card":
-        return '      <div className="p-6 hover:bg-gray-50 transition-colors">';
+        return '    <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 w-80">';
       default:
         return "  const increment = () => setCount(prev => prev + 1);";
     }
   }
 
   private getAppCode(componentName: string): string {
-    if (componentName === "Card") {
-      return `import Card from '@/components/Card';
-
-export default function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-3xl">
-        <Card />
-      </div>
-    </div>
-  );
-}`;
-    }
-
     return `import ${componentName} from '@/components/${componentName}';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <${componentName} />
-      </div>
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-8">
+      <${componentName} />
     </div>
   );
 }`;
