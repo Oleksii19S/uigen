@@ -293,54 +293,77 @@ export default ContactForm;`;
       case "card":
         return `import React, { useState } from 'react';
 
-const Card = ({
-  title = "Welcome to Our Service",
-  description = "Je to perdel",
-  imageUrl,
-  actions
-}) => {
+const Card = ({ title = "My Card", description = "Je to perdel" }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [entries, setEntries] = useState([]);
+
+  const handleAdd = () => {
+    if (!email || !password) return;
+    setEntries([...entries, { email, password }]);
+    setEmail('');
+    setPassword('');
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
-      )}
       <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold mb-1">{title}</h3>
         <p className="text-gray-600 mb-4">{description}</p>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div className="flex gap-6">
+          <div className="flex flex-col gap-3 w-64">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <button
+              onClick={handleAdd}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            >
+              Pavel Houska
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="flex-1 overflow-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="text-left px-3 py-2 border border-gray-200 font-medium text-gray-700">Email</th>
+                  <th className="text-left px-3 py-2 border border-gray-200 font-medium text-gray-700">Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                {entries.length === 0 ? (
+                  <tr>
+                    <td colSpan={2} className="px-3 py-4 text-center text-gray-400 border border-gray-200">No entries yet</td>
+                  </tr>
+                ) : (
+                  entries.map((entry, i) => (
+                    <tr key={i} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 border border-gray-200">{entry.email}</td>
+                      <td className="px-3 py-2 border border-gray-200">{'•'.repeat(entry.password.length)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
-        {actions && (
-          <div className="mt-4">
-            {actions}
-          </div>
-        )}
       </div>
     </div>
   );
@@ -427,16 +450,8 @@ export default Counter;`;
 export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <Card 
-          title="My Card"
-          description="Je to perdel"
-          actions={
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-              Pavel Houska
-            </button>
-          }
-        />
+      <div className="w-full max-w-3xl">
+        <Card />
       </div>
     </div>
   );
