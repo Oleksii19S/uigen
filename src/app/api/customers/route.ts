@@ -14,8 +14,16 @@ export async function POST(req: Request) {
 
     const creation_date = new Date().toISOString().split("T")[0];
 
+    const lastCustomer = await prisma.customer.findFirst({
+      orderBy: { id: "desc" },
+    });
+    const nextIndex = lastCustomer
+      ? parseInt(lastCustomer.id.replace("u_", ""), 10) + 1
+      : 0;
+    const id = `u_${String(nextIndex).padStart(2, "0")}`;
+
     const customer = await prisma.customer.create({
-      data: { email, password, creation_date },
+      data: { id, email, password, creation_date },
     });
 
     return NextResponse.json(customer, { status: 201 });

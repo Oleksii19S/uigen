@@ -8,7 +8,10 @@
       "PowerShell(git remote *)",
       "PowerShell(git push *)",
       "PowerShell(gh repo *)",
-      "PowerShell(Start-Process \"http://localhost:3002\")"
+      "PowerShell(Start-Process \"http://localhost:3002\")",
+      "PowerShell(Start-Process \"http://localhost:5555\")",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3002/api/customers\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"test@test.com\",\"password\":\"test123\"}')",
+      "PowerShell(Start-Process \"http://localhost:3000\")"
     ]
   }
 }

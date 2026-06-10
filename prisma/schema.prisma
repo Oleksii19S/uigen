@@ -22,7 +22,7 @@ model User {
 }
 
 model Customer {
-  id            String   @id @default(cuid())
+  id            String   @id
   email         String
   password      String
   creation_date String
