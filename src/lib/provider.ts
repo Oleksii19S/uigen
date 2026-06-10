@@ -399,7 +399,7 @@ export default function App() {
           description="This is a fantastic product that will change your life. Experience the difference today!"
           actions={
             <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-              Learn More
+              Pavel Houska
             </button>
           }
         />
