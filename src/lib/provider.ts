@@ -297,9 +297,17 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [entries, setEntries] = useState([]);
+  const [emailError, setEmailError] = useState('');
+
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
   const handleAdd = () => {
-    if (!email || !password) return;
+    if (!isValidEmail(email)) {
+      setEmailError('belbec, musis pouzit jako name@domain.com');
+      return;
+    }
+    if (!password) return;
+    setEmailError('');
     setEntries([...entries, { email, password }]);
     setEmail('');
     setPassword('');
@@ -317,10 +325,11 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
               <input
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => { setEmail(e.target.value); setEmailError(''); }}
                 placeholder="Enter your email"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={\`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 \${emailError ? 'border-red-500' : 'border-gray-300'}\`}
               />
+              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
