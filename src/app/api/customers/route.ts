@@ -14,6 +14,14 @@ export async function POST(req: Request) {
 
     const creation_date = new Date().toISOString().split("T")[0];
 
+    const count = await prisma.customer.count();
+    if (count >= 5) {
+      return NextResponse.json(
+        { error: "Maximum of 5 customers reached. No more records can be added." },
+        { status: 422 }
+      );
+    }
+
     const lastCustomer = await prisma.customer.findFirst({
       orderBy: { id: "desc" },
     });

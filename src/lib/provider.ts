@@ -298,6 +298,7 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
   const [password, setPassword] = useState('');
   const [entries, setEntries] = useState([]);
   const [emailError, setEmailError] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -308,14 +309,21 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
     }
     if (!password) return;
     setEmailError('');
+    setSubmitError('');
     try {
-      await fetch('/api/customers', {
+      const res = await fetch('/api/customers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+      if (!res.ok) {
+        const data = await res.json();
+        setSubmitError(data.error || 'Failed to save customer.');
+        return;
+      }
     } catch (e) {
-      console.error('Failed to save customer:', e);
+      setSubmitError('Failed to save customer.');
+      return;
     }
     setEntries([...entries, { email, password }]);
     setEmail('');
@@ -356,6 +364,7 @@ const Card = ({ title = "My Card", description = "Je to perdel" }) => {
             >
               Pavel Houska
             </button>
+            {submitError && <p className="text-red-500 text-xs mt-1">{submitError}</p>}
           </div>
           <div className="flex-1 overflow-auto">
             <table className="w-full text-sm border-collapse">
