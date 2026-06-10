@@ -40,9 +40,19 @@ export async function signUp(
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate u_XX id
+    const lastUser = await prisma.user.findFirst({
+      orderBy: { id: "desc" },
+    });
+    const nextIndex = lastUser
+      ? parseInt(lastUser.id.replace("u_", ""), 10) + 1
+      : 0;
+    const newId = `u_${String(nextIndex).padStart(2, "0")}`;
+
     // Create user
     const user = await prisma.user.create({
       data: {
+        id: newId,
         email,
         password: hashedPassword,
       },
